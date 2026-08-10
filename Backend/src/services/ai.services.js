@@ -2,10 +2,7 @@ const { GoogleGenAI } = require("@google/genai");
 const { z } = require("zod");
 const puppeteer = require("puppeteer");
 
-// ===============================
 // GEMINI CONFIGURATION
-// ===============================
-
 const apiKey = process.env.GOOGLE_GENAI_API_KEY;
 
 console.log("Gemini API Key Loaded:", !!apiKey);
@@ -20,10 +17,8 @@ const ai = new GoogleGenAI({
     apiKey: apiKey
 });
 
-// ===============================
 // INTERVIEW REPORT ZOD SCHEMA
 // Used only for validation
-// ===============================
 
 const interviewReportSchema = z.object({
 
@@ -75,10 +70,8 @@ const interviewReportSchema = z.object({
 });
 
 
-// ===============================
 // INTERVIEW REPORT JSON SCHEMA
 // Sent to Gemini
-// ===============================
 
 const interviewReportJsonSchema = {
 
@@ -262,9 +255,7 @@ const interviewReportJsonSchema = {
 };
 
 
-// ===============================
 // GENERATE INTERVIEW REPORT
-// ===============================
 
 async function generateInterviewReport({
     resume,
@@ -367,9 +358,7 @@ Analyze the candidate against the job description.
         );
 
 
-        // ===============================
         // GEMINI REQUEST
-        // ===============================
 
         const response =
             await ai.models.generateContent({
@@ -396,9 +385,7 @@ Analyze the candidate against the job description.
         );
 
 
-        // ===============================
         // GET RESPONSE TEXT
-        // ===============================
 
         const text = response.text;
 
@@ -418,9 +405,7 @@ Analyze the candidate against the job description.
         console.log(text);
 
 
-        // ===============================
         // PARSE JSON
-        // ===============================
 
         let parsedResponse;
 
@@ -441,9 +426,7 @@ Analyze the candidate against the job description.
         }
 
 
-        // ===============================
         // VALIDATE RESPONSE
-        // ===============================
 
         const validatedResponse =
             interviewReportSchema.parse(
@@ -477,9 +460,7 @@ Analyze the candidate against the job description.
 }
 
 
-// ===============================
 // GENERATE PDF FROM HTML
-// ===============================
 
 async function generatePdfFromHtml(
     htmlContent
@@ -543,9 +524,7 @@ async function generatePdfFromHtml(
 }
 
 
-// ===============================
 // RESUME PDF ZOD SCHEMA
-// ===============================
 
 const resumePdfSchema =
     z.object({
@@ -555,9 +534,7 @@ const resumePdfSchema =
     });
 
 
-// ===============================
 // RESUME PDF JSON SCHEMA
-// ===============================
 
 const resumePdfJsonSchema = {
 
@@ -582,9 +559,7 @@ const resumePdfJsonSchema = {
 };
 
 
-// ===============================
 // GENERATE RESUME PDF
-// ===============================
 
 async function generateResumePdf({
 
@@ -682,9 +657,7 @@ REQUIREMENTS
         );
 
 
-        // ===============================
         // GEMINI REQUEST
-        // ===============================
 
         const response =
             await ai.models.generateContent({
@@ -724,17 +697,13 @@ REQUIREMENTS
         );
 
 
-        // ===============================
         // PARSE JSON
-        // ===============================
 
         const jsonContent =
             JSON.parse(text);
 
 
-        // ===============================
         // VALIDATE HTML
-        // ===============================
 
         const validatedContent =
             resumePdfSchema.parse(
@@ -742,9 +711,7 @@ REQUIREMENTS
             );
 
 
-        // ===============================
         // CREATE PDF
-        // ===============================
 
         const pdfBuffer =
             await generatePdfFromHtml(
@@ -773,9 +740,7 @@ REQUIREMENTS
 }
 
 
-// ===============================
 // EXPORT
-// ===============================
 
 module.exports = {
 
